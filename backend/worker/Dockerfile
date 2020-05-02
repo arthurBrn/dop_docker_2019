@@ -1,5 +1,9 @@
 FROM openjdk:7
 
-WORKDIR /app
+COPY . /usr/src/app
 
-COPY . /app
+WORKDIR /usr/src/app
+
+RUN javac Main.java
+
+CMD ["java", "Main"]
