@@ -1,13 +1,13 @@
 version: '3'
 services:
-    node:
-        build: ./backend/node
-        volumes:
-            - ./backend/node:/app
-            - .env:/app/
-        ports:
-            - "${PORT_NODE_SERVICE}:${PORT_NODE_SERVICE}"
-        container_name: ${PROJECT_NAME}_node
+    #node:
+    #    build: ./backend/node
+    #    volumes:
+    #        - ./backend/node:/app
+    #        - .env:/app/
+    #    ports:
+    #        - "${PORT_NODE_SERVICE}:${PORT_NODE_SERVICE}"
+    #    container_name: ${PROJECT_NAME}_node
     postgres:
         build: ./backend/postgres
         environment: 
