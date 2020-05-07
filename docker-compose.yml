@@ -1,38 +1,43 @@
 version: '3'
 services:
-    #node:
-    #    build: ./backend/node
-    #    volumes:
-    #        - ./backend/node:/app
-    #        - .env:/app/
-    #    ports:
-    #        - "${PORT_NODE_SERVICE}:${PORT_NODE_SERVICE}"
-    #    container_name: ${PROJECT_NAME}_node
+    # node
+    result:
+        build: ./result
+        volumes:
+            - ./result:/app
+            - /app/node_modules
+        ports:
+            - "5001:80"
+        depends_on:
+            - postgres
+        container_name: "dev_result"
     postgres:
-        build: ./backend/postgres
+        image: postgres
+        #build: ./backend/postgres
         environment: 
             - POSTGRES_PASSWORD=baron
             - POSTGRES_USER=baron
             - POSTGRES_DB=brn
         volumes: 
-            - ./backend/postgres/volumes/pgdata:/var/lib/postgresql/data
+            - ./volumes/pgdata:/var/lib/postgresql/data
         ports: 
-            - "${PORT_POSTGRES_SERVICE}:${PORT_POSTGRES_SERVICE}"
-        container_name: ${PROJECT_NAME}_postgres
-    #redis:
-    #    build: ./backend/redis
-    #    ports:
-    #        - "${PORT_REDIS_SERVICE}:${PORT_REDIS_SERVICE}"
-    #    container_name: "${PROJECT_NAME}_redis"
+            - "5432:5432"
+        container_name: "dev_postgres"
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        container_name: "dev_redis"
     #worker:
-    #    build: ./backend/worker
+    #    build: ./worker
     #    ports:
     #        - "${PORT_WORKER_SERVICE}:${PORT_WORKER_SERVICE}"
-    #    container_name: ${PROJECT_NAME}_java
-    flask:
-        build: ./frontend/flask
+    #    container_name: "dev_worker"
+    # flask
+    poll:
+        build: ./poll
         ports:
-            - "${PORT_FLASK_SERVICE}:5000"
-        volumes: 
-            - ./frontend/flask/app:/app
-        container_name: ${PROJECT_NAME}_flask
+            - "5000:80"
+        #volumes:
+        #    - ./poll:/app
+        container_name: "dev_poll"
