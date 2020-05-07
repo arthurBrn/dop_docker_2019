@@ -1,45 +1,45 @@
 version: '3'
 services:
-    # node
     result:
         build: ./result
         volumes:
             - ./result:/app
             - /app/node_modules
         ports:
-            - "5001:80"
+            - "${RESULT_PORT}:80"
         depends_on:
             - postgres
         container_name: "dev_result"
+        restart: on-failure
     postgres:
         image: postgres
-        #build: ./backend/postgres
-        environment: 
-            - POSTGRES_PASSWORD=baron
-            - POSTGRES_USER=baron
-            #- POSTGRES_DB=brn
-            #- POSTGRES_ROOT_USER=monty
+        environment:
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
         volumes:
             - ./volumes/pgdata:/var/lib/postgresql/data
             - ./schema.sql:/docker-entrypoint-initdb.d/dump.sql
         ports: 
-            - "5432:5432"
+            - "${POSTGRES_PORT}:${POSTGRES_PORT}"
         container_name: "dev_postgres"
+        restart: on-failure
     redis:
         image: redis
         ports:
-            - "6379:6379"
+            - "${REDIS_PORT}:${REDIS_PORT}"
         container_name: "dev_redis"
-    #worker:
+        restart: on-failure
+        #worker:
     #    build: ./worker
     #    ports:
     #        - "${PORT_WORKER_SERVICE}:${PORT_WORKER_SERVICE}"
     #    container_name: "dev_worker"
-    # flask
+    #    restart: on-failure
     poll:
         build: ./poll
         ports:
-            - "5000:80"
-        #volumes:
-        #    - ./poll:/app
+            - "${POLL_PORT}:80"
+        volumes:
+            - ./poll:/app
+            - .env:/app/.env
         container_name: "dev_poll"
+        restart: on-failure
