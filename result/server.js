@@ -23,22 +23,22 @@ io.sockets.on('connection', function (socket) {
 });
 
 async.retry(
-  {times: 1000, interval: 1000},
-  function(callback) {
-      pg.connect('postgres://postgres:password@127.0.0.1/postgres', function(err, client, done) {
-          if (err) {
-              console.error("Waiting for db");
-          }
-          callback(err, client);
+    {times: 1000, interval: 1000},
+    function(callback) {
+      pg.connect('postgres://postgres:password@postgres/postgres', function(err, client, done) {
+        if (err) {
+          console.error("Waiting for db");
+        }
+        callback(err, client);
       });
-  },
-  function(err, client) {
-    if (err) {
-      return console.error("Giving up");
+    },
+    function(err, client) {
+      if (err) {
+        return console.error("Giving up");
+      }
+      console.log("Connected to db");
+      getVotes(client);
     }
-    console.log("Connected to db");
-    getVotes(client);
-  }
 );
 
 function getVotes(client) {
@@ -51,7 +51,7 @@ function getVotes(client) {
     }
 
     setTimeout(function() {getVotes(client) }, 1000);
-  });
+    });
 }
 
 function collectVotesFromResult(result) {
