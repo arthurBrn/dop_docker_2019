@@ -11,29 +11,38 @@ services:
             - postgres
         container_name: "dev_result"
         restart: on-failure
+        networks: 
+            - result-tier
     postgres:
         image: postgres
         environment:
             POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
         volumes:
-            - ./volumes/pgdata:/var/lib/postgresql/data
+            - ./db-data:/var/lib/postgresql/data
             - ./schema.sql:/docker-entrypoint-initdb.d/dump.sql
         ports: 
             - "${POSTGRES_PORT}:${POSTGRES_PORT}"
         container_name: "dev_postgres"
         restart: on-failure
+        networks: 
+            - result-tier
+            - back-tier
     redis:
         image: redis
         ports:
             - "${REDIS_PORT}:${REDIS_PORT}"
         container_name: "dev_redis"
         restart: on-failure
+        networks: 
+            - poll-tier
+            - back-tier
         #worker:
     #    build: ./worker
     #    ports:
     #        - "${PORT_WORKER_SERVICE}:${PORT_WORKER_SERVICE}"
     #    container_name: "dev_worker"
     #    restart: on-failure
+    #    network: back-tier
     poll:
         build: ./poll
         ports:
@@ -43,3 +52,12 @@ services:
             - .env:/app/.env
         container_name: "dev_poll"
         restart: on-failure
+        networks: 
+            - poll-tier
+networks: 
+    poll-tier:
+        driver: bridge
+    result-tier:
+        driver: bridge
+    back-tier:
+        driver: bridge
