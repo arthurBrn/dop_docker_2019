@@ -17,9 +17,11 @@ services:
         environment: 
             - POSTGRES_PASSWORD=baron
             - POSTGRES_USER=baron
-            - POSTGRES_DB=brn
-        volumes: 
+            #- POSTGRES_DB=brn
+            #- POSTGRES_ROOT_USER=monty
+        volumes:
             - ./volumes/pgdata:/var/lib/postgresql/data
+            - ./schema.sql:/docker-entrypoint-initdb.d/dump.sql
         ports: 
             - "5432:5432"
         container_name: "dev_postgres"
