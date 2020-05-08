@@ -10,7 +10,7 @@ class Worker {
     try {
         // Jedis redis = connectToRedis("127.0.0.1");
         Jedis redis = connectToRedis("redis");
-        Connection dbConn = connectToDB("postrges");
+        Connection dbConn = connectToDB("postgres");
 
         System.err.println("Watching vote queue");
 
