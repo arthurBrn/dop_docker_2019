@@ -36,13 +36,16 @@ services:
         networks: 
             - poll-tier
             - back-tier
-        #worker:
-    #    build: ./worker
-    #    ports:
-    #        - "${PORT_WORKER_SERVICE}:${PORT_WORKER_SERVICE}"
-    #    container_name: "dev_worker"
-    #    restart: on-failure
-    #    network: back-tier
+    worker:
+        build: ./worker
+        container_name: "dev_worker"
+        #volumes: 
+        #    - ./worker/src/main/java/worker/Worker.java:/usr/app
+        restart: on-failure
+        depends_on: 
+            - postgres
+        networks: 
+            - back-tier
     poll:
         build: ./poll
         ports:
